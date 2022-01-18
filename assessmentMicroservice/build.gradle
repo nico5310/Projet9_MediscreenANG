@@ -1,0 +1,83 @@
+plugins {
+	id 'java'
+	id 'idea'
+	id 'org.springframework.boot' version '2.5.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'jacoco'
+}
+
+bootJar {
+	mainClassName('com.nico5310.assessmentMicroservice.AssessmentApplication')
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "2020.0.3")
+}
+
+dependencies {
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.4'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.4'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.4'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.3'
+	implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.2'
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.4'
+	testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.12.0'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.6"
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		csv.enabled false
+		html.destination file("${buildDir}/jacocoHtml")
+	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					'**/beans/**',
+					'**/constants/**',
+					'**/model/**'
+			])
+		}))
+	}
+
+}
+
+test.finalizedBy jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.5
+			}
+		}
+	}
+}
