@@ -1,0 +1,77 @@
+<body style="background-color: #F9F9F9">
+	<div class="container h-100">
+
+		<div class="row" style="margin-top: 20px">
+			<h2>Note List for :
+				 <span class="text-primary fw-light" th:text="${patientName}"></span>
+			</h2>
+		</div>
+		<div class="s-flex-row" style="margin-top: 10px">
+			<h4>Age :
+				<span class="text-primary fw-light" th:text="${patientAge}"></span>
+			</h4>
+		</div>
+		<div class="row" style="margin-top: 10px">
+			<h4>Genre :
+				<span class="text-primary fw-light" th:text="${patientGenre}"></span>
+			</h4>
+		</div>
+		<div class="row" style="margin-top: 10px">
+			<h4>Triggers :
+				<span class="text-primary fw-light" th:text="${triggers}"></span>
+			</h4>
+		</div>
+		<div class="row">
+			<h2>Patient level Risk :
+				<span class="text-primary fw-light" th:text="${assessment}"></span>
+			</h2>
+		</div>
+
+
+		<div class="row" style="margin-top: 10px">
+			<p th:text="${#temporals.format(localDateTime, 'yyyy-MM-dd HH:mm')}"></p>
+		</div>
+
+		<div class="row justify-content_center" style="margin-top:20px">
+			<div class="col-12">
+				<a class="btn btn-primary btn-sm" th:href="@{/note/addForm/{patientId}(patientId=${patient.id})}"
+				   style="margin-bottom: 10px">Add New Note</a>
+				<!-- controller url-->
+			</div>
+
+			<table class="table table-bordered border-secondary  table-striped table-hover text-center"
+				   style="margin-top: 10px">
+				<thead>
+					<tr>
+<!--						<th>Id</th>-->
+						<th>Date</th>
+						<th>Recommendation</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="note : ${notes}">
+<!--						<td th:text="${note.id}" style="width: 20%"></td>-->
+<!--						<td th:text="${note.patientId}"></td>-->
+						<td th:text="${note.date}" style="width: 15%" ></td>
+						<td th:text="${note.recommendation}" ></td>
+
+
+						<td style="width: 15%" class="text-center">
+							<a class="btn btn-primary"
+							   th:href="@{/note/showUpdateForm/{id}/{patientId} (id=*{note.id},patientId=*{note.patientId})}">Edit
+							</a>&nbsp;|<!-- url controller-->
+							<a class="btn btn-danger"
+							   th:href="@{/note/delete/{id}(id=${note.id})}"
+							   th:onclick="if(!(confirm('Are you sure you want to delete this note?') )) return false"
+							>Delete
+							</a><!-- url controller -->
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<a class="btn btn-success btn-sm" href="/patient/list" style="margin-bottom: 10px" >Return to patient list</a>
+	</div>
+</body>

@@ -1,0 +1,38 @@
+
+<body style="background-color: #F9F9F9">
+    <div class="container h-100" style="margin-left: 22%; margin-top: 5%">
+
+      <div class="row" style="margin-top: 20px">
+        <h2>Update Note</h2>
+
+      </div>
+
+      <div class="row" >
+        <form action="#" th:action="@{/note/update/{id}/{patientId} (id=${note.id},patientId=${note.patientId})}"
+            th:object="${note}"
+            method="post" class="form-horizontal" style="width: 100%"> <!--controller url -->
+
+
+          <div class="mb-4">
+            <label for="recommendation" class="form-label">Recommendation</label>
+            <textarea class="form-control" id="recommendation" th:field="*{recommendation}" rows="6"></textarea>
+            <p class="text-danger" th:if="${#fields.hasErrors('recommendation')}"
+              th:errors="*{recommendation}">Error recommendation
+            </p>
+          </div>
+
+
+          <div class="form-group">
+            <div class="col-sm-12">
+              <input type="hidden" th:field="*{id}">
+              <input class="btn btn-primary" type="submit" value="Update Note">
+              <a class="btn btn-outline-danger"
+                th:href="@{/note/list/{id}(id=${note.patientId})}">Cancel</a> <!-- controller url -->
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+</body>
